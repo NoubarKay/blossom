@@ -12,12 +12,12 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      description: "Button size",
+      description: "Button variant",
       options: ["filled", "ghost", "outline", "subtle", "text"],
     },
     bg: {
       control: "select",
-      description: "Button size",
+      description: "Button color",
       options: [
         "gray",
         "red",
@@ -63,9 +63,9 @@ type Story = StoryObj<typeof Button>;
 export const Default: Story = {
   args: {
     children: "Button",
-    size: "sm",
-    variant: "filled",
-    bg: "blue",
+    size: "lg",
+    variant: "subtle",
+    bg: "teal",
     fullWidth: false,
     radius: "md",
   },
