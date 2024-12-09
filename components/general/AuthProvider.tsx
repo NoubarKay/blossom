@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 
 const unauthorizedPaths = [
   "/login",
@@ -44,7 +45,11 @@ export default function AuthProvider({
 
   // Loader until authentication is determined
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-screen w-screen flex items-center justify-center">
+        <Loader2Icon className="animate-spin text-black h-10 w-10" />
+      </div>
+    );
   }
 
   // Render children based on authentication and path

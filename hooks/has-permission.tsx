@@ -1,6 +1,7 @@
 export enum Permissions {
-  CREATE = "Create",
-  DELETE = "Delete",
+  CREATE = "create",
+  UPDATE = "update",
+  DELETE = "delete",
 }
 
 export default function HasPermission({

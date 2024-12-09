@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -8,28 +10,52 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { BoxIcon, LayoutDashboardIcon, Users2 } from "lucide-react";
 import Logo from "./general/Logo";
-
-const items = [
-  {
-    title: "Dashboard",
-    url: "#",
-    icon: LayoutDashboardIcon,
-  },
-  {
-    title: "Customers",
-    url: "#",
-    icon: Users2,
-  },
-  {
-    title: "Product",
-    url: "#",
-    icon: BoxIcon,
-  },
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export function AppSidebar() {
+  const [sections, setSections] = useState<{ id: number; title: string }[]>([]);
+
+  const router = useRouter();
+
+  const fetchSections = async () => {
+    const token = JSON.parse(localStorage.getItem("token") || "{}");
+    if (!token?.access_token) return;
+
+    // Check for cached sections in localStorage
+    const cachedSections = JSON.parse(localStorage.getItem("sections") || "[]");
+
+    if (cachedSections && cachedSections.length > 0) {
+      setSections(cachedSections); // Use cached data
+    } else {
+      try {
+        // Fetch from API if not in cache
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}api/section/GetSections`,
+          {
+            headers: {
+              Authorization: `Bearer ${token.access_token}`,
+            },
+          }
+        );
+
+        const fetchedSections = response.data;
+        setSections(fetchedSections);
+
+        // Cache the sections in localStorage
+        localStorage.setItem("sections", JSON.stringify(fetchedSections));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchSections();
+  }, []);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -39,11 +65,16 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {sections.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
+                    <a
+                      className="hover:cursor-pointer"
+                      onClick={() => {
+                        router.push(`/${item.title.toLowerCase()}`);
+                      }}
+                    >
+                      {/* <item.icon /> */}
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>

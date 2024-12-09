@@ -10,11 +10,11 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const sectionCombo = { section: "Company", permission: Permissions.DELETE };
+    const sectionCombo = { section: "company", permission: Permissions.DELETE };
     const hasPermission = HasPermission(sectionCombo);
 
     if (!hasPermission) {
-      router.push("login");
+      router.push("/dashboard");
     }
   }, [router]);
 
